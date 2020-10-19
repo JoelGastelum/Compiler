@@ -162,27 +162,30 @@ public class GUILayer extends JPanel implements ActionListener {
             resultadoAnalisis.setText("El analisis Semantico no se completo");
         }
 
-        ArrayList<String> delcareVar = new ArrayList<String>();
+        ArrayList<String> declareVar = new ArrayList<String>();
         
 
         for(int i = 0;i<TokenAsignaciones.ListaTokens.size()-1; i++){
             String tipo = nombresToken[TokenAsignaciones.ListaTokens.get(i).typ-1];
             String token = TokenAsignaciones.ListaTokens.get(i).tok;
-            if(tipo=="IDENTIFIER") {
-            	if(delcareVar.contains(token)) {
-    		  resultadoAnalisis.setForeground(Color.RED);
-              resultadoAnalisis.setText("La variable: "+ token +" esta definida en la linea: " +Integer.toString(TokenAsignaciones.ListaTokens.get(i).linea ));
-            	break;
+            String Veriftoken= TokenAsignaciones.ListaTokens.get(i+1).tok;
+            
+            if(token=="int" ||  token=="boolean" || token=="String" || token=="int") {		
+            	if(declareVar.contains(token+Veriftoken)) {
+                    resultadoAnalisis.setForeground(Color.RED);
+                    resultadoAnalisis.setText("Eror en la linea "+Integer.toString(TokenAsignaciones.ListaTokens.get(i).linea) +" La variable " + Veriftoken +" ya se encuentra definida");
+                    break;
+            	}else {
+            		declareVar.add(token+Veriftoken);
             	}
-            	delcareVar.add(token);
+            	
             }
-         
             String [] s = {tipo,token,Integer.toString(TokenAsignaciones.ListaTokens.get(i).linea)};
             tablaTokens.addRow(s);
         }
 
         //Se reinicia la Lista estática de TokenAsignaciones
-
+        declareVar.clear();
         TokenAsignaciones.ListaTokens = new ArrayList<NotToken>();
         tablaTokens.addRow(new Vector());
 
