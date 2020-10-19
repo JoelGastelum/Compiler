@@ -4,7 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Vector;
 
 public class GUILayer extends JPanel implements ActionListener {
@@ -160,12 +162,21 @@ public class GUILayer extends JPanel implements ActionListener {
             resultadoAnalisis.setText("El analisis Semantico no se completo");
         }
 
-        //Ciclo que recorre la Lista de Tokens:
+        ArrayList<String> delcareVar = new ArrayList<String>();
+        
 
         for(int i = 0;i<TokenAsignaciones.ListaTokens.size()-1; i++){
             String tipo = nombresToken[TokenAsignaciones.ListaTokens.get(i).typ-1];
             String token = TokenAsignaciones.ListaTokens.get(i).tok;
-            int linea =TokenAsignaciones.ListaTokens.get(i).linea;
+            if(tipo=="IDENTIFIER") {
+            	if(delcareVar.contains(token)) {
+    		  resultadoAnalisis.setForeground(Color.RED);
+              resultadoAnalisis.setText("La variable: "+ token +" esta definida en la linea: " +Integer.toString(TokenAsignaciones.ListaTokens.get(i).linea ));
+            	break;
+            	}
+            	delcareVar.add(token);
+            }
+         
             String [] s = {tipo,token,Integer.toString(TokenAsignaciones.ListaTokens.get(i).linea)};
             tablaTokens.addRow(s);
         }
